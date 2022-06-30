@@ -1,0 +1,9 @@
+<div class="container" [class.selected]="selected">
+    <div class="body">
+        <span class="subject truncate" [class.readed]="readed">{{ subject }}</span>
+    </div>
+    <div class="header">
+        <span class="header-item truncate" [class.readed]="readed">A: {{ to }}</span>
+        <span class="header-item date" [class.readed]="readed">{{ date }}</span>
+    </div>
+</div>

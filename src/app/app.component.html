@@ -1,0 +1,96 @@
+<mat-toolbar class="toolbar">
+  <span>SmtpD</span>
+  <span class="spacer"></span>
+  <span *ngIf="configsChanged" class="warning-message">! Riavvia l'applicazione per applicare le modifiche</span>
+  <button mat-button (click)="openConfig()">Configurazione</button>
+</mat-toolbar>
+
+<mat-drawer-container class="container" autosize>
+  <mat-drawer mode="side" opened>
+
+    <div class="email-items-container">
+
+      <div class="button-container">
+        <div class="search-container">
+          <mat-form-field appearance="outline" class="search">
+            <mat-label>Cerca per oggetto, mittente, destinatario e data</mat-label>
+            <mat-icon matPrefix>search</mat-icon>
+            <input title="Search" matInput [(ngModel)]="filterValue" (keyup)="filter()" />
+            <button *ngIf="filterValue" matSuffix mat-icon-button aria-label="Clear" (click)="cleanFilter()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+        <button mat-icon-button aria-label="Refresh emails" (click)="refreshEmails()" class="refresh-button">
+          <mat-icon>autorenew</mat-icon>
+        </button>
+        <button mat-icon-button aria-label="Delete all emails" (click)="deleteAll()" class="delete-all-button">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+
+      <div class="line"></div>
+
+      <div *ngIf="emails == null; else loading" class="spinner-container">
+        <mat-spinner [diameter]="35"></mat-spinner>
+        <span class="spinner-text">Caricamento..</span>
+      </div>
+
+      <ng-template #loading>
+        <div class="no-emails-item" *ngIf="emails?.length == 0; else show">
+          Non ci sono nuove email
+        </div>
+      </ng-template>
+
+      <ng-template #show>
+        <email-item *ngFor="let email of emails" [id]="email.id" [date]="email.createdAt" [to]="email.to"
+          [readed]="email.readed" [selected]="email.id == (selectedEmail?.id ?? -1)" [subject]="email.subject"
+          (click)="selectEmailById(email.id)" (delete)="removeById($event)" style="width: 100%;">
+          </email-item>
+      </ng-template>
+    </div>
+
+  </mat-drawer>
+  <mat-drawer-content class="drawer-content">
+
+    <div *ngIf="selectedEmail == null; else showEmail" class="no-selected-email">Nessun'email selezionata</div>
+
+    <ng-template #showEmail>
+
+      <div class="content-container">
+
+        <div class="subject-header">
+          <div class="subject-title wrap">
+            {{ selectedEmail?.subject }}
+          </div>
+          <div class="delete-button-container">
+            <button mat-button aria-label="Delete email" (click)="removeById(selectedEmail?.id ?? -1)">
+              <mat-icon>delete</mat-icon>
+              Elimina
+            </button>
+          </div>
+          
+        </div>
+
+        <div class="from-to-header">
+          <div class="small-size-font emails-container">
+            <div class="truncate"><span class="sub-title">Da:</span> {{ selectedEmail?.from }}</div>
+            <div class="truncate"><span class="sub-title">A:</span> {{ selectedEmail?.to }}</div>
+          </div>
+          <div class="small-size-font date">{{ selectedEmail?.createdAt }}</div>
+        </div>
+
+        <mat-tab-group mat-stretch-tabs>
+          <mat-tab label="Rendered">
+            <div class="email-content" [innerHTML]="selectedEmail?.message"></div>
+          </mat-tab>
+          <mat-tab label="Raw">
+            <div class="email-content">{{ selectedEmail?.message }}</div>
+          </mat-tab>
+        </mat-tab-group>
+
+      </div>
+    </ng-template>
+
+  </mat-drawer-content>
+</mat-drawer-container>

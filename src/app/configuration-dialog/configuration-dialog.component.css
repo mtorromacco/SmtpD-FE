@@ -1,0 +1,9 @@
+.slide-padding {
+    padding: 15px;
+}
+
+.input-row {
+    display: flex; 
+    justify-content: space-evenly; 
+    margin-bottom: 15px;
+}

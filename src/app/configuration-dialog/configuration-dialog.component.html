@@ -1,0 +1,37 @@
+<h1 mat-dialog-title>Configurazione</h1>
+
+<div mat-dialog-content>
+    <p>Configurazione applicatione</p>
+    <div class="slide-padding">
+        <mat-slide-toggle [(ngModel)]="auth" (change)="changeAuth()">Autenticazione</mat-slide-toggle>
+    </div>
+    <div class="input-row">
+        <mat-form-field appearance="outline">
+            <mat-label>Username</mat-label>
+            <input title="Username" [formControl]="username" matInput />
+            <mat-error *ngIf="username.hasError('empty')">Username obbligatorio</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input title="Password" matInput [formControl]="password" />
+            <mat-error *ngIf="password.hasError('empty')">Password obbligatoria</mat-error>
+        </mat-form-field>
+    </div>
+    <div class="input-row">
+        <mat-form-field appearance="outline">
+            <mat-label>Host</mat-label>
+            <input title="Host" matInput disabled value="localhost" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Porta</mat-label>
+            <input title="Port" matInput [formControl]="port" />
+            <mat-error *ngIf="port.hasError('empty')">Porta obbligatoria</mat-error>
+            <mat-error *ngIf="port.hasError('port')">La porta '55555' non può essere utilizzata</mat-error>
+        </mat-form-field>
+    </div>
+</div>
+
+<div mat-dialog-actions>
+    <button mat-button (click)="close()">Annulla</button>
+    <button mat-button (click)="save()" cdkFocusInitial>Salva</button>
+</div>
